@@ -2,7 +2,7 @@
 #Update mirrors-list for Arch Linux
 
 option="$1"
-version="1.0.0-alpha01"
+version="1.0.0-alpha02"
 
 function printError {
 	echo "invalid option, consult manual with command update-mirrors --help"
@@ -34,7 +34,7 @@ function verifyDependency {
 function progress {
 	for i in {0..100}; do
 		echo -ne ":: Updating mirrorlist... [ $i% ]\r"
-		sleep 0.8
+		sleep 1
 	done
 }
 
