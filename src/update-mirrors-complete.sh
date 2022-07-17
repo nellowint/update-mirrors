@@ -3,12 +3,13 @@ _update_mirrors_complete() {
 	COMPREPLY=()
 	cur="${COMP_WORDS[COMP_CWORD]}"
     prev="${COMP_WORDS[COMP_CWORD-1]}"
-    letters="-Sy -L -h -V"
-    words="--sync --list --help --version"
+    letters="-Sy -L -h -U -V"
+    words="--sync --list --help --uninstall --version"
 
 	case "$cur" in
 		--*) COMPREPLY=( $( compgen -W "$words" -- $cur ) );;
 		-*) COMPREPLY=( $( compgen -W "$letters" -- $cur ) );;
+		*) COMPREPLY=( $( compgen -W "$letters" -- $cur ) );;
 	esac
 	return 0
 }

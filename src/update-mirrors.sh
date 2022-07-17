@@ -2,33 +2,29 @@
 #Update mirrors-list for Arch Linux
 
 option="$1"
-version="1.0.0-alpha02"
+version="1.0.0-alpha03"
+name="update-mirrors"
+directory="$HOME/.$name"
 
 function printError {
-	echo "invalid option, consult manual with command update-mirrors --help"
+	echo "invalid option, consult manual with command $name --help"
 }
 
 function printManual {
-	echo "use:	update-mirrors <operation>"
+	echo "use:	$name <operation>"
 	echo "operations:"
-	echo "update-mirrors {-Sy  --sync	}"
-	echo "update-mirrors {-L  --list	}"
-	echo "update-mirrors {-h  --help	}"
-	echo "update-mirrors {-V  --version	}"
+	echo "$name {-Sy  --sync     }"
+	echo "$name {-L  --lisl      }"
+	echo "$name {-h  --help      }"
+	echo "$name {-U  --uninstall }"
+	echo "$name {-V  --version   }"
 }
 
 function printVersion {
-	echo "update-mirrors $version"
+	echo "$name $version"
 	echo "2019-2022 Vieirateam Developers"
 	echo "this is free software: you are free to change and redistribute it."
-	echo "learn more at https://github.com/wellintonvieira/update-mirros "
-}
-
-function verifyDependency {
-	dependency=$( pacman -Qs reflector )
-	if [ "$dependency" == "" ]; then
-		pacman -S reflector --noconfirm
-	fi
+	echo "learn more at https://github.com/wellintonvieira/$name "
 }
 
 function progress {
@@ -43,10 +39,11 @@ function printMirrors {
 }
 
 function updateMirrorsList {
+	sudo cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.backup
 	reflector -l 10 --protocol https --download-timeout 60 --sort rate --save /etc/pacman.d/mirrorlist &
 	progress
 	wait
-	rm -f /etc/pacman.d/mirrorlist.pacnew
+	sudo rm -f /etc/pacman.d/mirrorlist.pacnew
 	sleep 1s
 	echo ":: Mirrorlist updated successfully!"
 	sleep 1s
@@ -54,15 +51,23 @@ function updateMirrorsList {
 	echo ""
 }
 
-if [[ "$option" == "--sync" || "$option" == "-Sy" ]]; then
-	verifyDependency
-	updateMirrorsList
-elif [[ "$option" == "--list" || "$option" == "-L" ]]; then
-	printMirrors
-elif [[ "$option" == "--help" || "$option" == "-h" ]]; then
-	printManual
-elif [[ "$option" == "--version" || "$option" == "-V" ]]; then
-	printVersion
-else
-	printError
-fi
+function uninstallApp {
+	if [ -d $directory ]; then
+		rm -rf "$directory"
+		sudo rm -rf "/usr/share/bash-completion/completions/$name-complete.sh"
+		sed -i "/$name/d" "/$HOME/.bashrc"
+		echo "$name was uninstalled successfully"
+		exec bash --login
+	else
+		echo "$name is not installed"
+	fi
+}
+
+case $option in
+	"--sync"|"-Sy" ) updateMirrorsList ;;
+	"--list"|"-L" ) printMirrors ;;
+	"--help"|"-h" ) printManual ;;
+	"--uninstall"|"-U" ) uninstallApp;;
+	"--version"|"-V" ) printVersion ;;
+	*) printError ;;
+esac

@@ -1,19 +1,32 @@
 #!\bin\bash
-#file install update-mirrors in /opt/update-mirrors
+#file install update-mirrors in /$HOME/.update-mirrors
 
-if [ -d "/opt/update-mirrors" ]; then
-	echo "update-mirrors is installed in /opt/update-mirrors"
+name="update-mirrors"
+directory="$HOME/.$name"
+
+function checkingDependencies {
+	dependencies=("bash-completion" "reflector")
+	for dependency in $dependencies; do
+		condition=$( pacman -Qs $dependency )
+		if [ "$dependency" == "" ]; then
+			sudo pacman -S $dependency --noconfirm
+		else
+			echo -e "checking dependencies to install $name..."
+			sleep 1
+		fi
+	done
+	echo "$name installed successfully"
+}
+
+if [ -d "$directory" ]; then
+	echo "$name is installed in $directory"
 else
-	dependency=$( pacman -Qs bash-completion )
-	if [ "$dependency" == "" ]; then
-		sudo pacman -S bash-completion --noconfirm
-	fi
-	sudo mkdir "/opt/update-mirrors"
-	sudo cp "$PWD/src/update-mirrors.sh" "/opt/update-mirrors"
-	sudo cp "$PWD/src/update-mirrors-complete.sh" "/usr/share/bash-completion/completions/"
-	sudo chmod +x "/opt/update-mirrors/update-mirrors.sh"
-	sudo chmod +x "/$PWD/uninstall.sh"
-	echo -e "\nalias update-mirrors='sudo sh /opt/update-mirrors/update-mirrors.sh'\n" >> "/$HOME/.bashrc"
-	echo -e "source /usr/share/bash-completion/completions/update-mirrors-complete.sh" >> "/$HOME/.bashrc"
+	mkdir $directory
+	cp "$PWD/src/$name.sh" $directory
+	chmod +x "$directory/$name.sh"
+	sudo cp "$PWD/src/$name-complete.sh" "/usr/share/bash-completion/completions/"
+	echo -e "\nalias $name='sh $directory/$name.sh'\n" >> "/$HOME/.bashrc"
+	echo -e "source /usr/share/bash-completion/completions/$name-complete.sh" >> "/$HOME/.bashrc"
+	checkingDependencies
 	exec bash --login
 fi
