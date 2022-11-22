@@ -25,7 +25,7 @@ else
 	cp "$PWD/src/$name.sh" $directory
 	chmod +x "$directory/$name.sh"
 	sudo cp "$PWD/src/$name-complete.sh" "/usr/share/bash-completion/completions/"
-	echo -e "\nalias $name='sh $directory/$name.sh'\n" >> "/$HOME/.bashrc"
+	echo -e "\nalias $name='sudo sh $directory/$name.sh'\n" >> "/$HOME/.bashrc"
 	echo -e "source /usr/share/bash-completion/completions/$name-complete.sh" >> "/$HOME/.bashrc"
 	checkingDependencies
 	exec bash --login

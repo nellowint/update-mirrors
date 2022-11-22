@@ -2,7 +2,7 @@
 #Update mirrors-list for Arch Linux
 
 option="$1"
-version="1.0.0-alpha03"
+version="1.0.0-alpha05"
 name="update-mirrors"
 directory="$HOME/.$name"
 
@@ -13,11 +13,12 @@ function printError {
 function printManual {
 	echo "use:	$name <operation>"
 	echo "operations:"
-	echo "$name {-Sy  --sync     }"
-	echo "$name {-L  --lisl      }"
-	echo "$name {-h  --help      }"
-	echo "$name {-U  --uninstall }"
-	echo "$name {-V  --version   }"
+	echo "$name {-Sy  --sync      }"
+	echo "$name {-R   --restore   }"
+	echo "$name {-L   --lisl      }"
+	echo "$name {-h   --help      }"
+	echo "$name {-U   --uninstall }"
+	echo "$name {-V   --version   }"
 }
 
 function printVersion {
@@ -28,24 +29,46 @@ function printVersion {
 }
 
 function progress {
-	for i in {0..100}; do
-		echo -ne ":: Updating mirrorlist... [ $i% ]\r"
-		sleep 1
+	for (( i = 0; i < 100; i++ )); do
+	    sleep 1
+	    progressBar $i 100
 	done
+}
+
+function progressBar {
+    let _progress=(${1}*100/${2}*100)/100
+    let _done=(${_progress}*8)/10
+    let _left=80-$_done
+    _full=$(printf "%${_done}s")
+    _empty=$(printf "%${_left}s")
+    printf "\r[${_full// /#}${_empty// /-}] ${_progress}%%"
 }
 
 function printMirrors {
 	echo "$(cat /etc/pacman.d/mirrorlist)"
 }
 
-function updateMirrorsList {
+function updateMirrors {
 	sudo cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.backup
 	reflector -l 10 --protocol https --download-timeout 60 --sort rate --save /etc/pacman.d/mirrorlist &
+	echo "::Updating mirrorslist, please wait..."
 	progress
 	wait
 	sudo rm -f /etc/pacman.d/mirrorlist.pacnew
-	sleep 1s
+	sleep 1
 	echo ":: Mirrorlist updated successfully!"
+	finalizeUpdate
+}
+
+function restoreMirrors {
+	sudo cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.backup
+	sudo mv /etc/pacman.d/mirrorlist.backup /etc/pacman.d/mirrorlist
+	sleep 1
+	echo ":: Mirrorlist restored successfully!"
+	finalizeUpdate
+}
+
+function finalizeUpdate {
 	sleep 1s
 	read -rsp $':: Press any key to complete...' -n1 key
 	echo ""
@@ -64,10 +87,11 @@ function uninstallApp {
 }
 
 case $option in
-	"--sync"|"-Sy" ) updateMirrorsList ;;
-	"--list"|"-L" ) printMirrors ;;
-	"--help"|"-h" ) printManual ;;
-	"--uninstall"|"-U" ) uninstallApp;;
-	"--version"|"-V" ) printVersion ;;
+	"--sync"|"-Sy"		) updateMirrors ;;
+	"--restore"|"-R"    ) restoreMirrors ;;
+	"--list"|"-L"		) printMirrors ;;
+	"--help"|"-h"		) printManual ;;
+	"--uninstall"|"-U"	) uninstallApp;;
+	"--version"|"-V" 	) printVersion ;;
 	*) printError ;;
 esac
