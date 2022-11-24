@@ -1,6 +1,6 @@
 # Update Mirros for Arch Linux
 
-Update your mirror-list quickly and conveniently
+Update your mirror-list quickly and conveniently. To install update-mirrors on your computer, just run the command **chmod +x install.sh** and after running the command **sh install.sh**, if necessary run the command with sudo privileges.
 
 ##
 
