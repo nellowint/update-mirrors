@@ -2,7 +2,8 @@
 #Update mirrors-list for Arch Linux
 
 option="$1"
-version="1.0.0-alpha07"
+limitMirrors="$2"
+version="1.0.0-alpha08"
 name="update-mirrors"
 directory="$HOME/.$name"
 
@@ -13,7 +14,7 @@ function printError {
 function printManual {
 	echo "use:	$name <operation>"
 	echo "operations:"
-	echo "$name {-S   --sync      }"
+	echo "$name {-S   --sync      } [number of mirrors]"
 	echo "$name {-L   --lisl      }"
 	echo "$name {-h   --help      }"
 	echo "$name {-R   --restore   }"
@@ -33,13 +34,25 @@ function printMirrors {
 }
 
 function updateMirrors {
-	w3m -dump "https://archlinux.org/mirrorlist/?country=all&protocol=https&ip_version=4&use_mirror_status=on" | sed 's/#Server/Server/' | grep "Server" | head -n 10 > $directory/mirrorlist &
-	wait
-	sudo cp /etc/pacman.d/mirrorlist $directory/mirrorlist.backup
-	sudo mv $directory/mirrorlist /etc/pacman.d/mirrorlist
-	sudo rm -f /etc/pacman.d/mirrorlist.pacnew
-	sleep 1
-	echo ":: Mirrorlist updated successfully!"
+	if verifyLimitMirrors; then
+		w3m -dump "https://archlinux.org/mirrorlist/?country=all&protocol=https&ip_version=4&use_mirror_status=on" | sed 's/#Server/Server/' | grep "Server" | head -n $limitMirrors > $directory/mirrorlist &
+		wait
+		sudo cp /etc/pacman.d/mirrorlist $directory/mirrorlist.backup
+		sudo mv $directory/mirrorlist /etc/pacman.d/mirrorlist
+		sudo rm -f /etc/pacman.d/mirrorlist.pacnew
+		sleep 1
+		echo ":: Mirrorlist updated successfully!"
+	else
+		printError
+	fi
+}
+
+function verifyLimitMirrors {
+	local regex='^[0-9]+$'
+	if [[ $limitMirrors > 0 && $limitMirrors =~ $regex ]]; then
+		return 0
+	fi
+	return 1
 }
 
 function restoreMirrors {
