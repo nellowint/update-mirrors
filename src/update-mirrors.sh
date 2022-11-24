@@ -3,7 +3,7 @@
 
 option="$1"
 limitMirrors="$2"
-version="1.0.0-alpha08"
+version="1.0.0-alpha09"
 name="update-mirrors"
 directory="$HOME/.$name"
 
@@ -35,12 +35,12 @@ function printMirrors {
 
 function updateMirrors {
 	if verifyLimitMirrors; then
+		echo ":: Updating mirror list, please wait..."
 		w3m -dump "https://archlinux.org/mirrorlist/?country=all&protocol=https&ip_version=4&use_mirror_status=on" | sed 's/#Server/Server/' | grep "Server" | head -n $limitMirrors > $directory/mirrorlist &
 		wait
 		sudo cp /etc/pacman.d/mirrorlist $directory/mirrorlist.backup
 		sudo mv $directory/mirrorlist /etc/pacman.d/mirrorlist
 		sudo rm -f /etc/pacman.d/mirrorlist.pacnew
-		sleep 1
 		echo ":: Mirrorlist updated successfully!"
 	else
 		printError
@@ -57,7 +57,6 @@ function verifyLimitMirrors {
 
 function restoreMirrors {
 	sudo mv /$directory/mirrorlist.backup /etc/pacman.d/mirrorlist
-	sleep 1
 	echo ":: Mirrorlist restored successfully!"
 }
 
