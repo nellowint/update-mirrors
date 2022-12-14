@@ -3,7 +3,7 @@
 
 option="$1"
 limitMirrors="$2"
-version="1.0.0-alpha09"
+version="1.0.0-alpha10"
 name="update-mirrors"
 directory="$HOME/.$name"
 
@@ -15,7 +15,7 @@ function printManual {
 	echo "use:	$name <operation>"
 	echo "operations:"
 	echo "$name {-S   --sync      } [number of mirrors]"
-	echo "$name {-L   --lisl      }"
+	echo "$name {-L   --list      }"
 	echo "$name {-h   --help      }"
 	echo "$name {-R   --restore   }"
 	echo "$name {-U   --uninstall }"
