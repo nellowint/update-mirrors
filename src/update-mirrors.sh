@@ -3,7 +3,7 @@
 
 option="$1"
 limitMirrors="$2"
-version="1.0.0-alpha10"
+version="1.0.0-alpha11"
 name="update-mirrors"
 directory="$HOME/.$name"
 
@@ -15,6 +15,7 @@ function printManual {
 	echo "use:	$name <operation>"
 	echo "operations:"
 	echo "$name {-S   --sync      } [number of mirrors]"
+	echo "$name {-Sy  --update    }"
 	echo "$name {-L   --list      }"
 	echo "$name {-h   --help      }"
 	echo "$name {-R   --restore   }"
@@ -47,6 +48,28 @@ function updateMirrors {
 	fi
 }
 
+function updateMirrorsPackage {
+	if verifyVersion; then
+		echo "$name is on the latest version"
+	else
+		uninstallApp
+		echo ":: Preparing to update the $name package..."
+		cd $directory
+		git clone "https://github.com/wellintonvieira/$name.git"
+		cd $name
+		sh install.sh
+		rm -rf $name
+	fi
+}
+
+function verifyVersion {
+	local serverVersion="$( w3m -dump "https://github.com/wellintonvieira/update-mirrors/blob/main/src/update-mirrors.sh" | grep "version" | head -n 1 | sed 's/version=//' | sed 's/ //g' | sed 's/"//g' )"
+	if [[ "$version" == "$serverVersion" ]]; then
+		return 0
+	fi
+	return 1
+}
+
 function verifyLimitMirrors {
 	local regex='^[0-9]+$'
 	if [[ $limitMirrors > 0 && $limitMirrors =~ $regex ]]; then
@@ -77,6 +100,7 @@ case $option in
 	"--list"|"-L"		) printMirrors ;;
 	"--help"|"-h"		) printManual ;;
 	"--restore"|"-R"    ) restoreMirrors ;;
+	"--update"|"-Sy"	) updateMirrorsPackage ;;
 	"--uninstall"|"-U"	) uninstallApp;;
 	"--version"|"-V" 	) printVersion ;;
 	*) printError ;;
