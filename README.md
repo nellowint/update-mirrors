@@ -14,6 +14,8 @@ update-mirrors {-h   --help      }
 
 update-mirrors {-R   --restore   }
 
+update-mirrors {-Sy  --update    }
+
 update-mirrors {-U   --uninstall }
 
 update-mirrors {-V   --version   }

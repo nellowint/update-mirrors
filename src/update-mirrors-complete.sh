@@ -3,8 +3,8 @@ _update_mirrors_complete() {
 	COMPREPLY=()
 	cur="${COMP_WORDS[COMP_CWORD]}"
     prev="${COMP_WORDS[COMP_CWORD-1]}"
-    letters="-S -L -h -R -U -V"
-    words="--sync --list --help --restore --uninstall --version"
+    letters="-S -Sy -L -h -R -U -V"
+    words="--sync --update --list --help --restore --uninstall --version"
 
 	case "$cur" in
 		--*) COMPREPLY=( $( compgen -W "$words" -- $cur ) );;
