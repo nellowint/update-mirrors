@@ -3,9 +3,13 @@
 
 option="$1"
 limitMirrors="$2"
-version="1.0.0-alpha11"
+version="1.0.0-alpha12"
 name="update-mirrors"
 directory="$HOME/.$name"
+
+red=`tput setaf 1`
+green=`tput setaf 2`
+reset=`tput sgr0`
 
 function printError {
 	echo "invalid option, consult manual with command $name --help"
@@ -36,13 +40,13 @@ function printMirrors {
 
 function updateMirrors {
 	if verifyLimitMirrors; then
-		echo ":: Updating mirror list, please wait..."
+		echo ":: updating mirror list, please wait..."
 		w3m -dump "https://archlinux.org/mirrorlist/?country=all&protocol=https&ip_version=4&use_mirror_status=on" | sed 's/#Server/Server/' | grep "Server" | head -n $limitMirrors > $directory/mirrorlist &
 		wait
 		sudo cp /etc/pacman.d/mirrorlist $directory/mirrorlist.backup
 		sudo mv $directory/mirrorlist /etc/pacman.d/mirrorlist
 		sudo rm -f /etc/pacman.d/mirrorlist.pacnew
-		echo ":: Mirrorlist updated successfully!"
+		echo ":: mirrorlist updated successfully!"
 	else
 		printError
 	fi
@@ -50,20 +54,23 @@ function updateMirrors {
 
 function updateMirrorsPackage {
 	if verifyVersion; then
-		echo "$name is on the latest version"
+		echo "${green}$name ${reset}is on the latest version"
 	else
-		uninstallApp
-		echo ":: Preparing to update the $name package..."
-		cd $directory
+		cd /tmp/
+		if [ -d "$name" ]; then
+			rm -rf "$name"
+		fi
+		echo "${red}$name ${reset}needs to be updated"
 		git clone "https://github.com/wellintonvieira/$name.git"
+		echo "preparing to install the package ${green}$name${reset}"
 		cd $name
 		sh install.sh
-		rm -rf $name
+		cd $HOME
 	fi
 }
 
 function verifyVersion {
-	local serverVersion="$( w3m -dump "https://github.com/wellintonvieira/update-mirrors/blob/main/src/update-mirrors.sh" | grep "version" | head -n 1 | sed 's/version=//' | sed 's/ //g' | sed 's/"//g' )"
+	local serverVersion="$( w3m -dump "https://github.com/wellintonvieira/$name/blob/main/src/$name.sh" | grep "version" | head -n 1 | sed 's/version=//' | sed 's/ //g' | sed 's/"//g' )"
 	if [[ "$version" == "$serverVersion" ]]; then
 		return 0
 	fi
@@ -80,7 +87,7 @@ function verifyLimitMirrors {
 
 function restoreMirrors {
 	sudo mv /$directory/mirrorlist.backup /etc/pacman.d/mirrorlist
-	echo ":: Mirrorlist restored successfully!"
+	echo ":: mirrorlist restored successfully!"
 }
 
 function uninstallApp {

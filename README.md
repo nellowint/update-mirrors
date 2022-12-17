@@ -26,4 +26,3 @@ update-mirrors {-V   --version   }
 
 * [bash-completion](https://archlinux.org/packages/extra/any/bash-completion/)
 * [w3m](https://archlinux.org/packages/extra/x86_64/w3m/)
-

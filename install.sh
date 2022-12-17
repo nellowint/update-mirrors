@@ -19,14 +19,16 @@ function checkingDependencies {
 }
 
 if [ -d "$directory" ]; then
-	echo "$name is installed in $directory"
-else
-	mkdir $directory
-	cp "$PWD/src/$name.sh" $directory
-	chmod +x "$directory/$name.sh"
-	sudo cp "$PWD/src/$name-complete.sh" "/usr/share/bash-completion/completions/"
-	echo -e "\nalias $name='sh $directory/$name.sh'\n" >> "/$HOME/.bashrc"
-	echo -e "source /usr/share/bash-completion/completions/$name-complete.sh" >> "/$HOME/.bashrc"
-	checkingDependencies
-	exec bash --login
+	rm -rf "$directory"
+	sudo rm -rf "/usr/share/bash-completion/completions/$name-complete.sh"
+	sed -i "/$name/d" "/$HOME/.bashrc"
 fi
+
+mkdir $directory
+cp "$PWD/src/$name.sh" $directory
+chmod +x "$directory/$name.sh"
+sudo cp "$PWD/src/$name-complete.sh" "/usr/share/bash-completion/completions/"
+echo -e "\nalias $name='sh $directory/$name.sh'\n" >> "/$HOME/.bashrc"
+echo -e "source /usr/share/bash-completion/completions/$name-complete.sh" >> "/$HOME/.bashrc"
+checkingDependencies
+exec bash --login
