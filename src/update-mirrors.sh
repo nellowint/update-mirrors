@@ -3,7 +3,7 @@
 
 option="$1"
 limitMirrors="$2"
-version="1.0.0-alpha14"
+version="1.0.0-alpha15"
 name="update-mirrors"
 author="wellintonvieira"
 directory="$HOME/.$name"
@@ -46,7 +46,7 @@ function updateMirrors {
 		w3m -dump "https://archlinux.org/mirrorlist/?country=all&protocol=https&ip_version=4&use_mirror_status=on" | sed 's/#Server/Server/' | grep "Server" | head -n $limitMirrors > $directory/mirrorlist &
 		wait
 		sed -i "1i $dateUpdate" $directory/mirrorlist
-		sudo sed -i "1i $dateUpdate" /etc/pacman.d/mirrorlist
+		sudo sed -i "1i # $dateUpdate" /etc/pacman.d/mirrorlist
 		sudo cp /etc/pacman.d/mirrorlist $directory/mirrorlist.backup
 		sudo mv $directory/mirrorlist /etc/pacman.d/mirrorlist
 		sudo rm -f /etc/pacman.d/mirrorlist.pacnew
