@@ -3,7 +3,7 @@
 
 option="$1"
 limitMirrors="$2"
-version="1.0.0-alpha16"
+version="1.0.0-alpha17"
 name="update-mirrors"
 author="wellintonvieira"
 directory="$HOME/.$name"
@@ -30,7 +30,8 @@ function printManual {
 
 function printVersion {
 	echo "$name $version"
-	echo "2019-2023 Vieirateam Developers"
+	echo ">>>>>>> Merry Christmas <<<<<<<"
+	echo "2019-2023...2024 Vieirateam Developers"
 	echo "this is free software: you are free to change and redistribute it."
 	echo "learn more at https://github.com/$author/$name "
 }
