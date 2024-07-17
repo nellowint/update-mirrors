@@ -3,7 +3,9 @@
 
 option="$1"
 limitMirrors="$2"
-version="1.0.0-alpha18"
+filterCountry="$3"
+countries="${@:4}"
+version="1.0.0-alpha19"
 name="update-mirrors"
 author="wellintonvieira"
 directory="$HOME/.$name"
@@ -20,6 +22,7 @@ function printManual {
 	echo "use:	$name <operation>"
 	echo "operations:"
 	echo "$name {-S   --sync      } [number of mirrors]"
+	echo "$name {-S   --sync      } [number of mirrors] -C [optional list country acronym]"
 	echo "$name {-Sy  --update    }"
 	echo "$name {-L   --list      }"
 	echo "$name {-h   --help      }"
@@ -41,9 +44,25 @@ function printMirrors {
 
 function updateMirrors {
 	if verifyLimitMirrors; then
-		local dateUpdate=$( date +'Mirrorlist updated %d/%m/%Y %H:%M:%S' )
 		echo ":: updating mirror list, please wait..."
-		w3m -dump "https://archlinux.org/mirrorlist/?country=all&protocol=https&ip_version=4&use_mirror_status=on" | sed 's/#Server/Server/' | grep "Server" | head -n $limitMirrors > $directory/mirrorlist &
+		local dateUpdate=$( date +'Mirrorlist updated %d/%m/%Y %H:%M:%S' )
+		local countryOption=""
+
+		if [[ $filterCountry == "-C" ]]; then
+		    if [[ -z "$countries" ]]; then
+			    countryOption="country=all&"
+		    else
+				for country in $countries; do
+					countryOption+="country=$country&"
+				done
+			fi
+		else
+			countryOption="country=all&"
+		fi
+
+		local url='https://archlinux.org/mirrorlist/?'$countryOption'protocol=https&ip_version=4&use_mirror_status=on'
+
+		w3m -dump "$url" | sed 's/#Server/Server/' | grep "Server" | head -n $limitMirrors > $directory/mirrorlist &
 		wait
 		sed -i "1i # $dateUpdate" $directory/mirrorlist
 		sudo sed -i "1i # $dateUpdate" /etc/pacman.d/mirrorlist
