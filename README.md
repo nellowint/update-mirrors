@@ -1,28 +1,51 @@
-# Update Mirros for Arch Linux
+# update-mirrors
 
-Update your mirror-list quickly and conveniently. To install **update-mirrors** on your computer, just run the command **chmod +x install.sh** and after running the command **sh install.sh**, if necessary run the command with sudo privileges.
-
-##
-
-### Main features
-
-update-mirrors {-S   --sync      } [number of mirrors]
-
-update-mirrors {-L   --lisl      }
-
-update-mirrors {-h   --help      }
-
-update-mirrors {-R   --restore   }
-
-update-mirrors {-Sy  --update    }
-
-update-mirrors {-U   --uninstall }
-
-update-mirrors {-V   --version   }
+[![License](https://img.shields.io/badge/license-GNU-blue.svg)](LICENSE)
+[![Platform](https://img.shields.io/badge/platform-Arch%20Linux%20%26%20derivatives-lightgrey.svg)]()
 
 ##
 
-### Dependencies to be installed
+A simple command line (CLI) tool designed to simplify updating mirrors of Arch Linux-based systems.
 
-* [bash-completion](https://archlinux.org/packages/extra/any/bash-completion/)
-* [w3m](https://archlinux.org/packages/extra/x86_64/w3m/)
+## Installation
+
+### From AUR
+```bash
+aurup -S update-mirrors
+```
+### From Git
+```
+git clone https://github.com/nellowint/update-mirrors.git
+cd update-mirrors
+makepkg -si
+```
+
+## Features
+
+update-mirrors {-S or --sync	} [number of mirrors]
+
+update-mirrors {-L or --lisl	}
+
+update-mirrors {-h or --help	}
+
+update-mirrors {-R or --restore	}
+
+update-mirrors {-V or --version	}
+
+## Contributing
+✨ Contributions are welcome! Please:
+
+1) Fork the repository
+2) Create a feature branch (git checkout -b feature/your-feature)
+3) Commit your changes (git commit -am 'Add some feature')
+4) Push to the branch (git push origin feature/your-feature)
+5) Open a Pull Request
+
+## Dependencies
+
+* [bash-completion](https://archlinux.org/packages/?name=bash-completion)
+* [curl](https://archlinux.org/packages/?name=curl)
+* [git](https://archlinux.org/packages/?name=git)
+
+## License
+This project is licensed under the GNU GENERAL PUBLIC LICENSE - see the LICENSE file for details.
