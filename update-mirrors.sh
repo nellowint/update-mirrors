@@ -1,4 +1,4 @@
-#!\bin\bash
+#!/bin/bash
 # Maintainer: Wellinton Vieira <wellintonvieira.office@gmail.com>
 # A simple command line (CLI) tool designed to simplify updating mirrors of Arch Linux-based systems.
 
@@ -7,7 +7,7 @@ limit_mirrors="$2"
 filter_country="$3"
 countries="${@:4}"
 pkgname="update-mirrors"
-pkgver="1.24"
+pkgver="1.25"
 author="nellowint"
 base_url="https://archlinux.org"
 directory="$HOME/.$pkgname"
