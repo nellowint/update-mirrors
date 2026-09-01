@@ -1,6 +1,8 @@
 # update-mirrors
 
-[![License](https://img.shields.io/badge/license-GNU-blue.svg)](LICENSE)
+[![AUR](https://img.shields.io/aur/version/update-mirrors-git)](https://aur.archlinux.org/packages/update-mirrors-git)
+[![AUR votes](https://img.shields.io/aur/votes/update-mirrors-git)](https://aur.archlinux.org/packages/update-mirrors-git)
+[![License: GPL v3](https://img.shields.io/badge/license-GPL%20v3-blue.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-Arch%20Linux%20%26%20derivatives-lightgrey.svg)]()
 
 ##
@@ -11,7 +13,7 @@ A simple command line (CLI) tool designed to simplify updating mirrors of Arch L
 
 ### From AUR
 ```bash
-aurup -S update-mirrors
+aurup -S update-mirrors-git
 ```
 ### From Git
 ```
