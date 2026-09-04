@@ -9,6 +9,6 @@ pkgbase = update-mirrors
 	depends = bash-completion
 	depends = curl
 	source = git+https://github.com/nellowint/update-mirrors.git#tag=v1.26
-	sha256sums = SKIP
+	sha256sums = a39a2a59f8a916f1c29917bc5f54bde64caf7fd70ec7b4c7222a27f1b27c7c31
 
 pkgname = update-mirrors
