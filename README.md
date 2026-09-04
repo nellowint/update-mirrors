@@ -26,7 +26,7 @@ makepkg -si
 
 update-mirrors {-S or --sync	} [number of mirrors]
 
-update-mirrors {-L or --lisl	}
+update-mirrors {-L or --list	}
 
 update-mirrors {-h or --help	}
 
